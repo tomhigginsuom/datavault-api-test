@@ -94,9 +94,10 @@ print("API test : " + username)
 setup()
 
 filestore = create_filestore("org.datavaultplatform.common.storage.impl.LocalFileSystem", "Test data source", datapath)
-print("Created file store: " + filestore['id'])
+filestoreId = filestore['id']
+print("Created file store: " + filestoreId)
 
-files = list_files(filestore)
+files = list_files(filestoreId)
 for file in files:
   print("File: " + file['key'] + " Name: " + file['name'])
 
