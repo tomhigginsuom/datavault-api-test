@@ -15,7 +15,7 @@ def create_filestore(storageClass, label, path):
   payload = {"storageClass": storageClass, "label": label, "properties":{"rootPath":path}}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.post(server + '/datavault-broker/filestores', data=json.dumps(payload), headers=headers)
-  print("\t" + response.status_code)
+  print("\t" + str(response.status_code))
   return(response.json())
 
 def create_archivestore(storageClass, label, path):
@@ -23,7 +23,7 @@ def create_archivestore(storageClass, label, path):
   payload = {"storageClass": storageClass, "label": label, "properties":{"rootPath":path}}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.post(server + '/datavault-broker/archivestores', data=json.dumps(payload), headers=headers)
-  print("\t" + response.status_code)
+  print("\t" + str(response.status_code))
   return(response.json())
 
 def create_vault(name, description, policyID):
@@ -31,14 +31,14 @@ def create_vault(name, description, policyID):
   payload = {"name": name, "description": description, "policyID": policyID}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.post(server + '/datavault-broker/vaults', data=json.dumps(payload), headers=headers)
-  print("\t" + response.status_code)
+  print("\t" + str(response.status_code))
   return(response.json())
 
 def list_vaults():
   print("list_vaults")
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.get(server + '/datavault-broker/vaults', headers=headers)
-  print("\t" + response.status_code)
+  print("\t" + str(response.status_code))
   return(response.json())
 
 # Init the test environment
