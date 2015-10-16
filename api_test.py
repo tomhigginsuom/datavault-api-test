@@ -10,6 +10,7 @@ archivepath = "/home/ubuntu/data/api-test-archive"
 
 # Test user details
 username = "user1"
+vault_policy = "UNIVERSITY"
 
 # Utility functions
 def create_filestore(storageClass, label, path):
@@ -57,6 +58,20 @@ def list_vaults():
   print("\t" + str(response.status_code))
   return(response.json())
 
+def create_deposit(vaultId, note, filePath):
+  print("create_deposit : " + note)
+  payload = {"note": note, "filePath": filePath}
+  headers = {'Content-type': 'application/json', 'X-UserID': username}
+  response = requests.post(server + '/datavault-broker/vaults/' + vaultId + "/deposits", data=json.dumps(payload), headers=headers)
+  print("\t" + str(response.status_code))
+  return(response.json())
+
+def list_vault_deposits(vaultId):
+  print("list_vault_deposits : " + vaultId)
+  headers = {'Content-type': 'application/json', 'X-UserID': username}
+  response = requests.get(server + '/datavault-broker/vaults/' + vaultId + "/deposits", headers=headers)
+  print("\t" + str(response.status_code))
+  return(response.json())
 
 # Init the test environment
 def setup():
@@ -88,6 +103,30 @@ def create_file(size, path):
   command = "fallocate -l " + size + " " + path
   os.system(command)
 
+def dump_info():
+  print("")
+  print("System state")
+  print("------------")
+  print("")
+
+  print("Filestores")
+  print("----------")
+  filestores = list_filestores()
+  print("Count: " + str(len(filestores))
+  for filestore in filestores:
+    print("Filestore: " + filestore['id'] + " Label: " + filestore['label'])
+  print("")
+  
+  print("Vaults")
+  print("------")
+  vaults = list_vaults()
+  print("Count: " + str(len(vaults))
+  for vault in vaults:
+    print("Vault: " + vault['id'] + " Name: " + vault['name'])
+    vault_deposits = list_vault_deposits(vault['id'])
+    for vault_deposit in vault_deposits:
+      print("Deposit: " + vault_deposit['id'] + " Note: " + vault_deposit['note'])
+  print("")
 
 # Test script body
 print("API test : " + username)
@@ -97,19 +136,13 @@ filestore = create_filestore("org.datavaultplatform.common.storage.impl.LocalFil
 filestoreId = filestore['id']
 print("Created file store: " + filestoreId)
 
+vault = create_vault("Test vault", "Automatically created vault", vault_policy)
+vaultId = vault['id']
+print("Created vault with ID: " + vaultId)
+
 files = list_files(filestoreId)
 for file in files:
   print("File: " + file['key'] + " Name: " + file['name'])
+  create_deposit(vaultId, "Test deposit - " + file['name'], file['key'])
 
-vault = create_vault("Test vault", "Automatically created vault", "UNIVERSITY")
-print("Created vault with ID: " + vault['id'])
-
-vaults = list_vaults()
-for vault in vaults:
-  print("Vault: " + vault['id'] + " Name: " + vault['name'])
-
-filestores = list_filestores()
-for filestore in filestores:
-  print("Filestore: " + filestore['id'] + " Label: " + filestore['label'])
-
-
+dump_info()
