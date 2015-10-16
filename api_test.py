@@ -127,7 +127,7 @@ def dump_info():
     print("Vault: " + vault['id'] + " Name: " + vault['name'])
     vault_deposits = list_vault_deposits(vault['id'])
     for vault_deposit in vault_deposits:
-      print("Deposit: " + vault_deposit['id'] + " Note: " + vault_deposit['note'])
+      print("Deposit: " + vault_deposit['id'] + " Status: " + vault_deposit['status'] + " Note: " + vault_deposit['note'])
   print("")
 
 # Test script body
