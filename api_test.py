@@ -1,3 +1,5 @@
+import os
+import shutil
 import requests
 import json
 
@@ -43,8 +45,33 @@ def list_vaults():
 
 # Init the test environment
 def setup():
+  clear_data()
+  generate_test_data()
   create_filestore("org.datavaultplatform.common.storage.impl.LocalFileSystem", "Test data source", datapath)
   create_archivestore("org.datavaultplatform.common.storage.impl.LocalFileSystem", "Test archive", archivepath)
+
+def clear_data():
+  clear_directory(datapath)
+  clear_directory(archivepath)
+
+def clear_directory(path):
+  for root, dirs, files in os.walk(path):
+    for f in files:
+      print("unlink: " + f)
+      os.unlink(os.path.join(root, f))
+    for d in dirs:
+      print("rmtree: " + f)
+      shutil.rmtree(os.path.join(root, d))
+
+def generate_test_data():
+  create_file("250M", datapath + "/" + "test_data_250MB.bin"
+  create_file("100M", datapath + "/" + "test_data_100MB.bin"
+  create_file("50M", datapath + "/" + "test_data_50MB.bin"
+  create_file("25M", datapath + "/" + "test_data_25MB.bin"
+
+def create_file(size, path):
+  print("create_file: " + path)
+  command = "fallocate -l " + size + " " + path
 
 # Test script body
 print("API test : " + username)
