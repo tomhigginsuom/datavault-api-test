@@ -16,63 +16,63 @@ vault_policy = "UNIVERSITY"
 
 # Utility functions
 def create_filestore(storageClass, label, path):
-  print("create_filestore : " + label) if verbose else None
+  if verbose:
+    print("create_filestore : " + label)
   payload = {"storageClass": storageClass, "label": label, "properties":{"rootPath":path}}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.post(server + '/datavault-broker/filestores', data=json.dumps(payload), headers=headers)
-  print("\t" + str(response.status_code)) if verbose else None
   return(response.json())
 
 def list_filestores():
-  print("list_filestores") if verbose else None
+  if verbose:
+    print("list_filestores")
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.get(server + '/datavault-broker/filestores', headers=headers)
-  print("\t" + str(response.status_code)) if verbose else None
   return(response.json())
 
 def list_files(filestoreId):
-  print("list_files : " + filestoreId) if verbose else None
+  if verbose:
+    print("list_files : " + filestoreId)
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.get(server + '/datavault-broker/files/' + filestoreId, headers=headers)
-  print("\t" + str(response.status_code)) if verbose else None
   return(response.json())
 
 def create_archivestore(storageClass, label, path):
-  print("create_archivestore : " + label) if verbose else None
+  if verbose:
+    print("create_archivestore : " + label)
   payload = {"storageClass": storageClass, "label": label, "properties":{"rootPath":path}}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.post(server + '/datavault-broker/archivestores', data=json.dumps(payload), headers=headers)
-  print("\t" + str(response.status_code)) if verbose else None
   return(response.json())
 
 def create_vault(name, description, policyID):
-  print("create_vault : " + name) if verbose else None
+  if verbose:
+    print("create_vault : " + name)
   payload = {"name": name, "description": description, "policyID": policyID}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.post(server + '/datavault-broker/vaults', data=json.dumps(payload), headers=headers)
-  print("\t" + str(response.status_code)) if verbose else None
   return(response.json())
 
 def list_vaults():
-  print("list_vaults") if verbose else None
+  if verbose:
+    print("list_vaults")
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.get(server + '/datavault-broker/vaults', headers=headers)
-  print("\t" + str(response.status_code)) if verbose else None
   return(response.json())
 
 def create_deposit(vaultId, note, filePath):
-  print("create_deposit : " + note) if verbose else None
+  if verbose:
+    print("create_deposit : " + note)
   payload = {"note": note, "filePath": filePath}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.post(server + '/datavault-broker/vaults/' + vaultId + "/deposits", data=json.dumps(payload), headers=headers)
-  print("\t" + str(response.status_code)) if verbose else None
   return(response.json())
 
 def list_vault_deposits(vaultId):
-  print("list_vault_deposits : " + vaultId) if verbose else None
+  if verbose:
+    print("list_vault_deposits : " + vaultId)
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.get(server + '/datavault-broker/vaults/' + vaultId + "/deposits", headers=headers)
-  print("\t" + str(response.status_code)) if verbose else None
   return(response.json())
 
 # Init the test environment
