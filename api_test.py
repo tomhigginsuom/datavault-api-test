@@ -155,7 +155,7 @@ for x in range(0,10):
 
   files = list_files(filestoreId)
   for file in files:
-    if !file['isDirectory']:
+    if not file['isDirectory']:
       print("File: " + file['key'] + " Name: " + file['name'])
       deposit = create_deposit(vaultId, "Test deposit - " + file['name'], file['key'])
       tracked_depositIds.append(deposit['id'])
