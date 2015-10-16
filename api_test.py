@@ -138,13 +138,14 @@ filestore = create_filestore("org.datavaultplatform.common.storage.impl.LocalFil
 filestoreId = filestore['id']
 print("Created file store: " + filestoreId)
 
-vault = create_vault("Test vault", "Automatically created vault", vault_policy)
-vaultId = vault['id']
-print("Created vault with ID: " + vaultId)
+for x in range(0,10):
+  vault = create_vault("Test vault " + str(x), "Automatically created vault", vault_policy)
+  vaultId = vault['id']
+  print("Created vault with ID: " + vaultId)
 
-files = list_files(filestoreId)
-for file in files:
-  print("File: " + file['key'] + " Name: " + file['name'])
-  create_deposit(vaultId, "Test deposit - " + file['name'], file['key'])
+  files = list_files(filestoreId)
+  for file in files:
+    print("File: " + file['key'] + " Name: " + file['name'])
+    create_deposit(vaultId, "Test deposit - " + file['name'], file['key'])
 
 dump_info()
