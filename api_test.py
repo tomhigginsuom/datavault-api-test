@@ -175,8 +175,8 @@ while(len(tracked_deposits) > 0):
   print("Tracking " + str(len(tracked_deposits)) + " deposits:")
   deposit_statuses = {}
   for tracked_deposit in tracked_deposits:
-  	vaultId = tracked_deposit[0]
-  	depostId = tracked_deposit[1]
+    vaultId = tracked_deposit[0]
+    depostId = tracked_deposit[1]
     deposit = get_deposit(vaultId, depostId)
     print("Deposit: " + vaultId + "/" + depostId + " - " + deposit['status'])
     if deposit['status'] == "COMPLETE":
