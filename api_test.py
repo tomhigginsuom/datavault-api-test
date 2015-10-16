@@ -112,7 +112,7 @@ def dump_info():
   print("Filestores")
   print("----------")
   filestores = list_filestores()
-  print("Count: " + str(len(filestores))
+  print("Count: " + str(len(filestores)))
   for filestore in filestores:
     print("Filestore: " + filestore['id'] + " Label: " + filestore['label'])
   print("")
@@ -120,7 +120,7 @@ def dump_info():
   print("Vaults")
   print("------")
   vaults = list_vaults()
-  print("Count: " + str(len(vaults))
+  print("Count: " + str(len(vaults)))
   for vault in vaults:
     print("Vault: " + vault['id'] + " Name: " + vault['name'])
     vault_deposits = list_vault_deposits(vault['id'])
