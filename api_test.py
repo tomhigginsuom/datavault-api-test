@@ -20,6 +20,13 @@ def create_filestore(storageClass, label, path):
   print("\t" + str(response.status_code))
   return(response.json())
 
+def list_filestores():
+  print("list_filestores")
+  headers = {'Content-type': 'application/json', 'X-UserID': username}
+  response = requests.get(server + '/datavault-broker/filestores', headers=headers)
+  print("\t" + str(response.status_code))
+  return(response.json())
+
 def create_archivestore(storageClass, label, path):
   print("create_archivestore : " + label)
   payload = {"storageClass": storageClass, "label": label, "properties":{"rootPath":path}}
@@ -42,6 +49,7 @@ def list_vaults():
   response = requests.get(server + '/datavault-broker/vaults', headers=headers)
   print("\t" + str(response.status_code))
   return(response.json())
+
 
 # Init the test environment
 def setup():
@@ -74,12 +82,20 @@ def create_file(size, path):
   command = "fallocate -l " + size + " " + path
   os.system(command)
 
+
 # Test script body
 print("API test : " + username)
 setup()
-create_vault("Test vault", "Automatically created vault", "UNIVERSITY")
+
+vault = create_vault("Test vault", "Automatically created vault", "UNIVERSITY")
+print("Created vault with ID: " + vault['id'])
+
 vaults = list_vaults()
 for vault in vaults:
   print("Vault: " + vault['id'] + " Name: " + vault['name'])
+
+filestores = list_filestores()
+for filestore in filestores:
+  print("Filestore: " + filestore['id'] + " Label: " + filestore['label'])
 
 
