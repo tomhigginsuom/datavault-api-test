@@ -22,7 +22,7 @@ def create_archivestore(storageClass, label, path):
   print("create_archivestore : " + label)
   payload = {"storageClass": storageClass, "label": label, "properties":{"rootPath":path}}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
-  result = requests.post(server + '/datavault-broker/archivestores', data=json.dumps(payload), headers=headers)
+  response = requests.post(server + '/datavault-broker/archivestores', data=json.dumps(payload), headers=headers)
   print(response.status_code)
   print(response.json())
 
@@ -37,7 +37,7 @@ def create_vault(name, description, policyID):
 def list_vaults():
   print("list_vaults")
   headers = {'Content-type': 'application/json', 'X-UserID': username}
-  result = requests.get(server + '/datavault-broker/vaults', headers=headers)
+  response = requests.get(server + '/datavault-broker/vaults', headers=headers)
   print(response.status_code)
   print(response.json())
 
