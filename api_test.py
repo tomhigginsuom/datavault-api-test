@@ -74,6 +74,13 @@ def list_vault_deposits(vaultId):
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.get(server + '/datavault-broker/vaults/' + vaultId + "/deposits", headers=headers)
   return(response.json())
+  
+def get_deposit(vaultId, depositId):
+  if verbose:
+    print("get_deposit : " + vaultId + "/" + depositId)
+  headers = {'Content-type': 'application/json', 'X-UserID': username}
+  response = requests.get(server + '/datavault-broker/vaults/' + vaultId + "/deposits/" + depositId, headers=headers)
+  return(response.json())
 
 # Init the test environment
 def setup():
@@ -95,6 +102,7 @@ def clear_directory(path):
       shutil.rmtree(os.path.join(root, d))
 
 def generate_test_data():
+  os.mkdir(datapath + "/" + "restore")
   create_file("250M", datapath + "/" + "test_data_250MB.bin")
   create_file("100M", datapath + "/" + "test_data_100MB.bin")
   create_file("50M", datapath + "/" + "test_data_50MB.bin")
@@ -138,6 +146,8 @@ filestore = create_filestore("org.datavaultplatform.common.storage.impl.LocalFil
 filestoreId = filestore['id']
 print("Created file store: " + filestoreId)
 
+tracked_depositIds = []
+
 for x in range(0,10):
   vault = create_vault("Test vault " + str(x), "Automatically created vault", vault_policy)
   vaultId = vault['id']
@@ -145,7 +155,19 @@ for x in range(0,10):
 
   files = list_files(filestoreId)
   for file in files:
-    print("File: " + file['key'] + " Name: " + file['name'])
-    create_deposit(vaultId, "Test deposit - " + file['name'], file['key'])
+    if !file['isDirectory']:
+      print("File: " + file['key'] + " Name: " + file['name'])
+      deposit = create_deposit(vaultId, "Test deposit - " + file['name'], file['key'])
+      tracked_depositIds.append(deposit['id'])
+
+while(len(tracked_depositIds) > 0):
+  print("")
+  print("Tracking " + str(len(tracked_deposits)) + " deposits:")
+  for tracked_depositId in tracked_depositIds:
+    deposit = get_deposit(vaultId, tracked_depositId)
+    print("Deposit: " + tracked_depositIds + " - " + deposit['status'])
+    if deposit['status'] == "COMPLETE":
+      # Create a restore job
+      tracked_depositIds.remove(tracked_depositId)
 
 dump_info()
