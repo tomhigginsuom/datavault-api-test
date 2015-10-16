@@ -146,7 +146,7 @@ filestore = create_filestore("org.datavaultplatform.common.storage.impl.LocalFil
 filestoreId = filestore['id']
 print("Created file store: " + filestoreId)
 
-tracked_depositIds = []
+tracked_deposits = []
 
 for x in range(0,10):
   vault = create_vault("Test vault " + str(x), "Automatically created vault", vault_policy)
@@ -158,16 +158,16 @@ for x in range(0,10):
     if not file['isDirectory']:
       print("File: " + file['key'] + " Name: " + file['name'])
       deposit = create_deposit(vaultId, "Test deposit - " + file['name'], file['key'])
-      tracked_depositIds.append(deposit['id'])
+      tracked_deposits.append((vaultId, deposit['id']))
 
-while(len(tracked_depositIds) > 0):
+while(len(tracked_deposits) > 0):
   print("")
-  print("Tracking " + str(len(tracked_depositIds)) + " deposits:")
-  for tracked_depositId in tracked_depositIds:
-    deposit = get_deposit(vaultId, tracked_depositId)
-    print("Deposit: " + tracked_depositIds + " - " + deposit['status'])
+  print("Tracking " + str(len(tracked_deposits)) + " deposits:")
+  for tracked_deposit in tracked_deposits:
+    deposit = get_deposit(tracked_deposit[0], tracked_deposit[1])
+    print("Deposit: " + tracked_deposit[0] + "/" + tracked_deposit[1] + " - " + deposit['status'])
     if deposit['status'] == "COMPLETE":
       # Create a restore job
-      tracked_depositIds.remove(tracked_depositId)
+      tracked_deposits.remove(tracked_deposit)
 
 dump_info()
