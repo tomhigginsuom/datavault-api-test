@@ -2,6 +2,7 @@ import os
 import shutil
 import requests
 import json
+import time
 
 verbose = False
 
@@ -9,6 +10,7 @@ verbose = False
 server = "http://localhost:8080"
 datapath = "/home/ubuntu/data/api-test-data"
 archivepath = "/home/ubuntu/data/api-test-archive"
+restoreDir = "restore"
 
 # Test user details
 username = "user1"
@@ -82,6 +84,14 @@ def get_deposit(vaultId, depositId):
   response = requests.get(server + '/datavault-broker/vaults/' + vaultId + "/deposits/" + depositId, headers=headers)
   return(response.json())
 
+def create_restore(vaultId, depositId, note, restorePath):
+  if verbose:
+    print("create_restore : " + note)
+  payload = {"note": note, "restorePath": restorePath}
+  headers = {'Content-type': 'application/json', 'X-UserID': username}
+  response = requests.post(server + '/datavault-broker/vaults/' + vaultId + "/deposits/" + depositId + "/restore", data=json.dumps(payload), headers=headers)
+  return(response.json())
+
 # Init the test environment
 def setup():
   clear_data()
@@ -148,7 +158,7 @@ print("Created file store: " + filestoreId)
 
 tracked_deposits = []
 
-for x in range(0,10):
+for x in range(0,4):
   vault = create_vault("Test vault " + str(x), "Automatically created vault", vault_policy)
   vaultId = vault['id']
   print("Created vault with ID: " + vaultId)
@@ -163,11 +173,16 @@ for x in range(0,10):
 while(len(tracked_deposits) > 0):
   print("")
   print("Tracking " + str(len(tracked_deposits)) + " deposits:")
+  deposit_statuses = {}
   for tracked_deposit in tracked_deposits:
-    deposit = get_deposit(tracked_deposit[0], tracked_deposit[1])
-    print("Deposit: " + tracked_deposit[0] + "/" + tracked_deposit[1] + " - " + deposit['status'])
+  	vaultId = tracked_deposit[0]
+  	depostId = tracked_deposit[1]
+    deposit = get_deposit(vaultId, depostId)
+    print("Deposit: " + vaultId + "/" + depostId + " - " + deposit['status'])
     if deposit['status'] == "COMPLETE":
-      # Create a restore job
       tracked_deposits.remove(tracked_deposit)
+      restore = create_restore(vaultId, depostId, "Test restore", restoreDir)
+
+  time.sleep(5)
 
 dump_info()
