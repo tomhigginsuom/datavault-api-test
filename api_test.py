@@ -72,7 +72,7 @@ def generate_test_data():
 def create_file(size, path):
   print("create_file: " + path)
   command = "fallocate -l " + size + " " + path
-  system(command)
+  os.system(command)
 
 # Test script body
 print("API test : " + username)
