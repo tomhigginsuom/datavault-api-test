@@ -181,7 +181,7 @@ while(len(tracked_deposits) > 0):
     print("Deposit: " + vaultId + "/" + depostId + " - " + deposit['status'])
     if deposit['status'] == "COMPLETE":
       tracked_deposits.remove(tracked_deposit)
-      restore = create_restore(vaultId, depostId, "Test restore", restoreDir)
+      restore = create_restore(vaultId, depostId, "Test restore", filestoreId + "/" + restoreDir)
 
   time.sleep(5)
 
