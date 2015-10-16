@@ -64,10 +64,10 @@ def clear_directory(path):
       shutil.rmtree(os.path.join(root, d))
 
 def generate_test_data():
-  create_file("250M", datapath + "/" + "test_data_250MB.bin"
-  create_file("100M", datapath + "/" + "test_data_100MB.bin"
-  create_file("50M", datapath + "/" + "test_data_50MB.bin"
-  create_file("25M", datapath + "/" + "test_data_25MB.bin"
+  create_file("250M", datapath + "/" + "test_data_250MB.bin")
+  create_file("100M", datapath + "/" + "test_data_100MB.bin")
+  create_file("50M", datapath + "/" + "test_data_50MB.bin")
+  create_file("25M", datapath + "/" + "test_data_25MB.bin")
 
 def create_file(size, path):
   print("create_file: " + path)
