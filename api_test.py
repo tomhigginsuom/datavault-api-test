@@ -27,6 +27,13 @@ def list_filestores():
   print("\t" + str(response.status_code))
   return(response.json())
 
+def list_files(filestoreId):
+  print("list_files : " + filestoreId)
+  headers = {'Content-type': 'application/json', 'X-UserID': username}
+  response = requests.get(server + '/datavault-broker/files/' + filestoreId, headers=headers)
+  print("\t" + str(response.status_code))
+  return(response.json())
+
 def create_archivestore(storageClass, label, path):
   print("create_archivestore : " + label)
   payload = {"storageClass": storageClass, "label": label, "properties":{"rootPath":path}}
@@ -55,7 +62,6 @@ def list_vaults():
 def setup():
   clear_data()
   generate_test_data()
-  create_filestore("org.datavaultplatform.common.storage.impl.LocalFileSystem", "Test data source", datapath)
   create_archivestore("org.datavaultplatform.common.storage.impl.LocalFileSystem", "Test archive", archivepath)
 
 def clear_data():
@@ -86,6 +92,13 @@ def create_file(size, path):
 # Test script body
 print("API test : " + username)
 setup()
+
+filestore = create_filestore("org.datavaultplatform.common.storage.impl.LocalFileSystem", "Test data source", datapath)
+print("Created file store: " + filestore['id'])
+
+files = list_files(filestore)
+for file in files:
+  print("File: " + file['key'] + " Name: " + file['name'])
 
 vault = create_vault("Test vault", "Automatically created vault", "UNIVERSITY")
 print("Created vault with ID: " + vault['id'])
