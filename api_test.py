@@ -162,7 +162,7 @@ for x in range(0,10):
 
 while(len(tracked_depositIds) > 0):
   print("")
-  print("Tracking " + str(len(tracked_deposits)) + " deposits:")
+  print("Tracking " + str(len(tracked_depositIds)) + " deposits:")
   for tracked_depositId in tracked_depositIds:
     deposit = get_deposit(vaultId, tracked_depositId)
     print("Deposit: " + tracked_depositIds + " - " + deposit['status'])
