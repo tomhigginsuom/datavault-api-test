@@ -15,6 +15,7 @@ restoreDir = "restore"
 # Test user details
 username = "user1"
 vault_policy = "UNIVERSITY"
+vault_group = "CHSS"
 
 # Utility functions
 def create_filestore(storageClass, label, path):
@@ -47,10 +48,10 @@ def create_archivestore(storageClass, label, path):
   response = requests.post(server + '/datavault-broker/archivestores', data=json.dumps(payload), headers=headers)
   return(response.json())
 
-def create_vault(name, description, policyID):
+def create_vault(name, description, policyID, groupID):
   if verbose:
     print("create_vault : " + name)
-  payload = {"name": name, "description": description, "policyID": policyID}
+  payload = {"name": name, "description": description, "policyID": policyID, "groupID": groupID}
   headers = {'Content-type': 'application/json', 'X-UserID': username}
   response = requests.post(server + '/datavault-broker/vaults', data=json.dumps(payload), headers=headers)
   return(response.json())
@@ -117,6 +118,8 @@ def generate_test_data():
   create_file("100M", datapath + "/" + "test_data_100MB.bin")
   create_file("50M", datapath + "/" + "test_data_50MB.bin")
   create_file("25M", datapath + "/" + "test_data_25MB.bin")
+  create_file("5M", datapath + "/" + "test_data_5MB.bin")
+  create_file("2M", datapath + "/" + "test_data_2MB.bin")
 
 def create_file(size, path):
   print("create_file: " + path)
@@ -156,10 +159,12 @@ filestore = create_filestore("org.datavaultplatform.common.storage.impl.LocalFil
 filestoreId = filestore['id']
 print("Created file store: " + filestoreId)
 
+# Carry out some deposits and then restore the test data
+
 tracked_deposits = []
 
 for x in range(0,4):
-  vault = create_vault("Test vault " + str(x), "Automatically created vault", vault_policy)
+  vault = create_vault("Test vault " + str(x), "Automatically created vault", vault_policy, vault_group)
   vaultId = vault['id']
   print("Created vault with ID: " + vaultId)
 
@@ -184,5 +189,19 @@ while(len(tracked_deposits) > 0):
       restore = create_restore(vaultId, depostId, "Test restore", filestoreId + "/" + restoreDir)
 
   time.sleep(5)
+
+# Carry out a large number of small deposits
+
+for x in range(0,400):
+  vault = create_vault("Test small vault " + str(x), "Automatically created small vault", vault_policy, vault_group)
+  vaultId = vault['id']
+  print("Created vault with ID: " + vaultId)
+  
+  files = list_files(filestoreId)
+  for file in files:
+    if not file['isDirectory']:
+      if file['name'] == "test_data_2MB.bin":
+        print("File: " + file['key'] + " Name: " + file['name'])
+        deposit = create_deposit(vaultId, "Test small deposit - " + file['name'], file['key'])
 
 dump_info()
