@@ -166,7 +166,7 @@ print("Created file store: " + filestoreId)
 tracked_deposits = []
 
 for x in range(0,4):
-  vault = create_vault("Test vault " + str(x), "Automatically created vault", vault_policy, vault_group)
+  vault = create_vault("Test vault " + str(x), "Automatically created vault", vault_policy, vault_group, vault_dataset)
   vaultId = vault['id']
   print("Created vault with ID: " + vaultId)
 
