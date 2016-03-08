@@ -16,6 +16,7 @@ restoreDir = "restore"
 # Test user details
 username = "user1"
 vault_policy = "UNIVERSITY"
+vault_dataset = "MOCK-DATASET-1"
 vault_group = "CHSS"
 
 # Utility functions
@@ -49,10 +50,10 @@ def create_archivestore(storageClass, label, path):
   response = requests.post(server + '/datavault-broker/archivestores', data=json.dumps(payload), headers=headers)
   return(response.json())
 
-def create_vault(name, description, policyID, groupID):
+def create_vault(name, description, policyID, groupID, datasetID):
   if verbose:
     print("create_vault : " + name)
-  payload = {"name": name, "description": description, "policyID": policyID, "groupID": groupID}
+  payload = {"name": name, "description": description, "policyID": policyID, "groupID": groupID, "datasetID": datasetID}
   headers = {'Content-type': 'application/json', 'X-UserID': username, 'X-Client-Key': client_key}
   response = requests.post(server + '/datavault-broker/vaults', data=json.dumps(payload), headers=headers)
   return(response.json())
@@ -194,7 +195,7 @@ while(len(tracked_deposits) > 0):
 # Carry out a large number of small deposits
 
 for x in range(0,400):
-  vault = create_vault("Test small vault " + str(x), "Automatically created small vault", vault_policy, vault_group)
+  vault = create_vault("Test small vault " + str(x), "Automatically created small vault", vault_policy, vault_group, vault_dataset)
   vaultId = vault['id']
   print("Created vault with ID: " + vaultId)
   
