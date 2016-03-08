@@ -110,7 +110,7 @@ def clear_directory(path):
       print("unlink: " + f)
       os.unlink(os.path.join(root, f))
     for d in dirs:
-      print("rmtree: " + f)
+      print("rmtree: " + d)
       shutil.rmtree(os.path.join(root, d))
 
 def generate_test_data():
